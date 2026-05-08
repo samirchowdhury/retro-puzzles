@@ -22,29 +22,16 @@ export class Renderer {
   drawLake(lake) {
     const ctx = this.ctx;
 
-    // Shore border (sandy path where the fox runs)
+    // Shore border (sandy)
     ctx.beginPath();
-    ctx.arc(lake.cx, lake.cy, lake.radius + 18, 0, Math.PI * 2);
+    ctx.arc(lake.cx, lake.cy, lake.radius + 4, 0, Math.PI * 2);
     ctx.fillStyle = '#8B7355';
     ctx.fill();
-
-    // Outer shore edge
-    ctx.beginPath();
-    ctx.arc(lake.cx, lake.cy, lake.radius + 20, 0, Math.PI * 2);
-    ctx.strokeStyle = '#6B5335';
-    ctx.lineWidth = 2;
-    ctx.stroke();
 
     // Water
     ctx.beginPath();
     ctx.arc(lake.cx, lake.cy, lake.radius, 0, Math.PI * 2);
     ctx.fillStyle = '#0f2a4a';
-    ctx.fill();
-
-    // Subtle water highlight
-    ctx.beginPath();
-    ctx.arc(lake.cx - lake.radius * 0.15, lake.cy - lake.radius * 0.15, lake.radius * 0.7, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(30, 80, 140, 0.25)';
     ctx.fill();
   }
 

@@ -69,11 +69,10 @@ function checkWinLose(dt) {
   const duckAngle = duck.angle();
   const gap = Lake.angleDist(duckAngle, fox.angle);
 
-  // Catch threshold: the larger of the fox's per-frame angular step
-  // or the angular width of the fox sprite (~14px on a perimeter of 2πR)
-  const spriteAngularWidth = 14 / (2 * Math.PI * lake.radius) * (2 * Math.PI);
-  const frameStep = fox.angularStepPerFrame(dt);
-  const threshold = Math.max(frameStep, spriteAngularWidth);
+  // Catch threshold: fox's per-frame angular travel (handles discrete time
+  // steps). The puzzle models duck and fox as points, so the threshold is
+  // only what's needed for frame-rate discretisation — not sprite overlap.
+  const threshold = fox.angularStepPerFrame(dt);
 
   if (gap <= threshold) {
     state = State.LOSE;
