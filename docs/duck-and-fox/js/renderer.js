@@ -22,11 +22,18 @@ export class Renderer {
   drawLake(lake) {
     const ctx = this.ctx;
 
-    // Shore border (sandy)
+    // Shore border (sandy path where the fox runs)
     ctx.beginPath();
-    ctx.arc(lake.cx, lake.cy, lake.radius + 4, 0, Math.PI * 2);
+    ctx.arc(lake.cx, lake.cy, lake.radius + 18, 0, Math.PI * 2);
     ctx.fillStyle = '#8B7355';
     ctx.fill();
+
+    // Outer shore edge
+    ctx.beginPath();
+    ctx.arc(lake.cx, lake.cy, lake.radius + 20, 0, Math.PI * 2);
+    ctx.strokeStyle = '#6B5335';
+    ctx.lineWidth = 2;
+    ctx.stroke();
 
     // Water
     ctx.beginPath();
@@ -205,9 +212,9 @@ export class Renderer {
     ctx.lineTo(this.W * 0.8, this.H * 0.27);
     ctx.stroke();
 
-    // Puzzle description
-    ctx.fillStyle = '#bbb';
-    ctx.font = '7px "Press Start 2P", monospace';
+    // Puzzle description — use a readable system font at a legible size
+    ctx.fillStyle = '#ccc';
+    ctx.font = '14px monospace';
     const lines = [
       'A duck sits at the center',
       'of a circular lake.',
@@ -220,7 +227,7 @@ export class Renderer {
       'to fly away. Can it escape?',
     ];
     lines.forEach((line, i) => {
-      ctx.fillText(line, this.W / 2, this.H * 0.35 + i * 16);
+      ctx.fillText(line, this.W / 2, this.H * 0.35 + i * 20);
     });
 
     // Mini duck

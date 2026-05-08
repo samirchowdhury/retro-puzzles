@@ -43,9 +43,13 @@ export class Fox {
     while (this.angle < -Math.PI) this.angle += 2 * Math.PI;
   }
 
-  // Position on shore
+  // Position on shore path (centered on the sandy ring outside the water)
   pos() {
-    return this.lake.shorePoint(this.angle);
+    const offset = 10; // centers fox on the 18px-wide shore ring
+    return {
+      x: this.lake.cx + Math.cos(this.angle) * (this.lake.radius + offset),
+      y: this.lake.cy + Math.sin(this.angle) * (this.lake.radius + offset),
+    };
   }
 
   // Per-frame angular travel (used for catch threshold)
