@@ -18,4 +18,8 @@ canvas#game {
   image-rendering: crisp-edges;
   border: 3px solid #333;
   outline: none;
+  max-width: calc(100vw - 8px);
+  touch-action: none;
+  -webkit-touch-callout: none;
+  user-select: none;
 }

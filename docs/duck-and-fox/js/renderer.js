@@ -153,7 +153,7 @@ export class Renderer {
 
   // ── HUD ───────────────────────────────────────────────
 
-  drawHUD(elapsed, showHintActive) {
+  drawHUD(elapsed, showHintActive, isTouch) {
     const ctx = this.ctx;
     const t = elapsed.toFixed(1);
 
@@ -162,10 +162,52 @@ export class Renderer {
     ctx.textAlign = 'center';
     ctx.fillText(`TIME: ${t}s`, this.W / 2, 20);
 
-    ctx.fillStyle = '#ccc';
-    ctx.font = '12px monospace';
-    ctx.fillText('WASD/Arrows: swim   Space: orbit', this.W / 2, this.H - 28);
-    ctx.fillText(`H: hint ${showHintActive ? '(ON)' : '(OFF)'}`, this.W / 2, this.H - 12);
+    if (!isTouch) {
+      ctx.fillStyle = '#ccc';
+      ctx.font = '12px monospace';
+      ctx.fillText('WASD/Arrows: swim   Space: orbit', this.W / 2, this.H - 28);
+      ctx.fillText(`H: hint ${showHintActive ? '(ON)' : '(OFF)'}`, this.W / 2, this.H - 12);
+    }
+  }
+
+  // ── Touch controls overlay ─────────────────────────────
+
+  drawTouchControls(touch) {
+    const ctx = this.ctx;
+
+    // Joystick base
+    ctx.beginPath();
+    ctx.arc(touch.joyCenter.x, touch.joyCenter.y, touch.joyRadius, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Joystick thumb
+    const tx = touch.joyCenter.x + touch.joyX * touch.joyRadius;
+    const ty = touch.joyCenter.y + touch.joyY * touch.joyRadius;
+    ctx.beginPath();
+    ctx.arc(tx, ty, 14, 0, Math.PI * 2);
+    ctx.fillStyle = touch.joyActive ? 'rgba(255,255,255,0.45)' : 'rgba(255,255,255,0.15)';
+    ctx.fill();
+
+    // Orbit button
+    ctx.beginPath();
+    ctx.arc(touch.orbitCenter.x, touch.orbitCenter.y, touch.orbitRadius, 0, Math.PI * 2);
+    ctx.fillStyle = touch.orbitActive ? 'rgba(100,200,255,0.35)' : 'rgba(255,255,255,0.08)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Orbit label
+    ctx.fillStyle = touch.orbitActive ? 'rgba(200,240,255,0.8)' : 'rgba(255,255,255,0.5)';
+    ctx.font = '8px "Press Start 2P", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('ORBIT', touch.orbitCenter.x, touch.orbitCenter.y);
+    ctx.textBaseline = 'alphabetic';
   }
 
   // ── CRT scanline overlay ──────────────────────────────
@@ -180,7 +222,7 @@ export class Renderer {
 
   // ── Title screen ─────────────────────────────────────
 
-  drawTitle(blink) {
+  drawTitle(blink, isTouch) {
     const ctx = this.ctx;
 
     this.clear();
@@ -233,7 +275,7 @@ export class Renderer {
     if (blink) {
       ctx.fillStyle = '#44ff44';
       ctx.font = '9px "Press Start 2P", monospace';
-      ctx.fillText('PRESS ENTER TO START', this.W / 2, this.H * 0.92);
+      ctx.fillText(isTouch ? 'TAP TO START' : 'PRESS ENTER TO START', this.W / 2, this.H * 0.92);
     }
 
     this.drawScanlines();
@@ -241,7 +283,7 @@ export class Renderer {
 
   // ── Win screen ────────────────────────────────────────
 
-  drawWin(elapsed) {
+  drawWin(elapsed, isTouch) {
     const ctx = this.ctx;
 
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
@@ -258,12 +300,12 @@ export class Renderer {
 
     ctx.fillStyle = '#ccc';
     ctx.font = '14px monospace';
-    ctx.fillText('Press Enter to play again', this.W / 2, this.H * 0.65);
+    ctx.fillText(isTouch ? 'Tap to play again' : 'Press Enter to play again', this.W / 2, this.H * 0.65);
   }
 
   // ── Lose screen ───────────────────────────────────────
 
-  drawLose() {
+  drawLose(isTouch) {
     const ctx = this.ctx;
 
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
@@ -276,6 +318,6 @@ export class Renderer {
 
     ctx.fillStyle = '#ccc';
     ctx.font = '14px monospace';
-    ctx.fillText('Press Enter to retry', this.W / 2, this.H * 0.55);
+    ctx.fillText(isTouch ? 'Tap to retry' : 'Press Enter to retry', this.W / 2, this.H * 0.55);
   }
 }

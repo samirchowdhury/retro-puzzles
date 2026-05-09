@@ -4,6 +4,7 @@ import { Lake } from './lake.js';
 import { Duck } from './duck.js';
 import { Fox } from './fox.js';
 import { Renderer } from './renderer.js';
+import { TouchInput, isTouchDevice } from './touch.js';
 
 // ── Constants ─────────────────────────────────────────
 const CANVAS_W = 480;
@@ -27,6 +28,14 @@ const renderer = new Renderer(canvas);
 const lake = new Lake(CANVAS_W, CANVAS_H);
 const duck = new Duck(lake);
 const fox = new Fox(lake, Duck.SPEED);
+
+// ── Touch (mobile) ────────────────────────────────────
+const touchInput = new TouchInput(canvas, keys);
+touchInput.onTap(() => {
+  if (state === State.TITLE || state === State.WIN || state === State.LOSE) {
+    startGame();
+  }
+});
 
 // ── Input ─────────────────────────────────────────────
 const keys = new Set();
@@ -98,11 +107,12 @@ function loop(now) {
 
   switch (state) {
     case State.TITLE:
-      renderer.drawTitle(blinkOn);
+      renderer.drawTitle(blinkOn, isTouchDevice);
       break;
 
     case State.PLAYING:
       elapsed += dt;
+      touchInput.active = true;
       duck.update(dt, keys);
       fox.update(dt, duck);
       checkWinLose(dt);
@@ -114,17 +124,19 @@ function loop(now) {
       renderer.drawTrail(duck.trail);
       renderer.drawDuck(duck);
       renderer.drawFox(fox);
-      renderer.drawHUD(elapsed, showHint);
+      renderer.drawHUD(elapsed, showHint, isTouchDevice);
+      if (isTouchDevice) renderer.drawTouchControls(touchInput);
       renderer.drawScanlines();
       break;
 
     case State.WIN:
-      // Keep the game scene visible behind the overlay
-      renderer.drawWin(elapsed);
+      touchInput.active = false;
+      renderer.drawWin(elapsed, isTouchDevice);
       break;
 
     case State.LOSE:
-      renderer.drawLose();
+      touchInput.active = false;
+      renderer.drawLose(isTouchDevice);
       break;
   }
 
