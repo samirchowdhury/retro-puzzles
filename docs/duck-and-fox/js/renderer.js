@@ -162,9 +162,9 @@ export class Renderer {
     ctx.textAlign = 'center';
     ctx.fillText(`TIME: ${t}s`, this.W / 2, 20);
 
-    ctx.fillStyle = '#888';
-    ctx.font = '7px "Press Start 2P", monospace';
-    ctx.fillText('WASD/Arrows: swim  Space: orbit', this.W / 2, this.H - 25);
+    ctx.fillStyle = '#ccc';
+    ctx.font = '12px monospace';
+    ctx.fillText('WASD/Arrows: swim   Space: orbit', this.W / 2, this.H - 28);
     ctx.fillText(`H: hint ${showHintActive ? '(ON)' : '(OFF)'}`, this.W / 2, this.H - 12);
   }
 
