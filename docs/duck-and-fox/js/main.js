@@ -21,6 +21,7 @@ let blinkOn = true;
 const canvas = document.getElementById('game');
 canvas.width = CANVAS_W;
 canvas.height = CANVAS_H;
+canvas.focus();
 
 const renderer = new Renderer(canvas);
 const lake = new Lake(CANVAS_W, CANVAS_H);
@@ -30,7 +31,8 @@ const fox = new Fox(lake, Duck.SPEED);
 // ── Input ─────────────────────────────────────────────
 const keys = new Set();
 
-document.addEventListener('keydown', (e) => {
+// Use capture phase on window to intercept Space/arrows before browser scrolls
+window.addEventListener('keydown', (e) => {
   keys.add(e.code);
 
   if (e.code === 'Enter') {
@@ -47,11 +49,11 @@ document.addEventListener('keydown', (e) => {
   if (e.code.startsWith('Arrow') || e.code === 'Space') {
     e.preventDefault();
   }
-});
+}, { capture: true });
 
-document.addEventListener('keyup', (e) => {
+window.addEventListener('keyup', (e) => {
   keys.delete(e.code);
-});
+}, { capture: true });
 
 // ── Game control ──────────────────────────────────────
 
