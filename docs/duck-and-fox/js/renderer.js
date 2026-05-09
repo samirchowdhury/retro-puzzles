@@ -248,18 +248,17 @@ export class Renderer {
     ctx.fillRect(0, 0, this.W, this.H);
 
     ctx.fillStyle = '#44ff44';
-    ctx.font = '18px "Press Start 2P", monospace';
+    ctx.font = '22px "Press Start 2P", monospace';
     ctx.textAlign = 'center';
-    ctx.fillText('YOU ESCAPED!', this.W / 2, this.H * 0.35);
+    ctx.fillText('YOU ESCAPED!', this.W / 2, this.H * 0.38);
 
     ctx.fillStyle = '#fff';
-    ctx.font = '10px "Press Start 2P", monospace';
-    ctx.fillText(`Time: ${elapsed.toFixed(1)}s`, this.W / 2, this.H * 0.48);
+    ctx.font = '16px monospace';
+    ctx.fillText(`Time: ${elapsed.toFixed(1)}s`, this.W / 2, this.H * 0.50);
 
-    ctx.fillStyle = '#888';
-    ctx.font = '8px "Press Start 2P", monospace';
-    ctx.fillText('PRESS ENTER TO', this.W / 2, this.H * 0.65);
-    ctx.fillText('PLAY AGAIN', this.W / 2, this.H * 0.70);
+    ctx.fillStyle = '#ccc';
+    ctx.font = '14px monospace';
+    ctx.fillText('Press Enter to play again', this.W / 2, this.H * 0.65);
   }
 
   // ── Lose screen ───────────────────────────────────────
@@ -271,24 +270,12 @@ export class Renderer {
     ctx.fillRect(0, 0, this.W, this.H);
 
     ctx.fillStyle = '#ff4444';
-    ctx.font = '18px "Press Start 2P", monospace';
+    ctx.font = '22px "Press Start 2P", monospace';
     ctx.textAlign = 'center';
-    ctx.fillText('CAUGHT!', this.W / 2, this.H * 0.30);
+    ctx.fillText('CAUGHT!', this.W / 2, this.H * 0.40);
 
-    ctx.fillStyle = '#bbb';
-    ctx.font = '7px "Press Start 2P", monospace';
-    const hints = [
-      'Hint: Stay near the center',
-      'and orbit inside R/4 to get',
-      'opposite the fox, then dash!',
-    ];
-    hints.forEach((line, i) => {
-      ctx.fillText(line, this.W / 2, this.H * 0.46 + i * 14);
-    });
-
-    ctx.fillStyle = '#888';
-    ctx.font = '8px "Press Start 2P", monospace';
-    ctx.fillText('PRESS ENTER', this.W / 2, this.H * 0.70);
-    ctx.fillText('TO RETRY', this.W / 2, this.H * 0.75);
+    ctx.fillStyle = '#ccc';
+    ctx.font = '14px monospace';
+    ctx.fillText('Press Enter to retry', this.W / 2, this.H * 0.55);
   }
 }
