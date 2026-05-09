@@ -34,6 +34,8 @@ const keys = new Set();
 // Use capture phase on window to intercept Space/arrows before browser scrolls
 window.addEventListener('keydown', (e) => {
   keys.add(e.code);
+  // Also track by e.key for browsers where Space e.code differs
+  if (e.key === ' ') keys.add('Space');
 
   if (e.code === 'Enter') {
     if (state === State.TITLE || state === State.WIN || state === State.LOSE) {
@@ -46,13 +48,14 @@ window.addEventListener('keydown', (e) => {
   }
 
   // Prevent arrow keys and space from scrolling the page
-  if (e.code.startsWith('Arrow') || e.code === 'Space') {
+  if (e.code.startsWith('Arrow') || e.code === 'Space' || e.key === ' ') {
     e.preventDefault();
   }
 }, { capture: true });
 
 window.addEventListener('keyup', (e) => {
   keys.delete(e.code);
+  if (e.key === ' ') keys.delete('Space');
 }, { capture: true });
 
 // ── Game control ──────────────────────────────────────
