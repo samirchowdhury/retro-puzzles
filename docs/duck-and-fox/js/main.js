@@ -43,8 +43,8 @@ document.addEventListener('keydown', (e) => {
     showHint = !showHint;
   }
 
-  // Prevent arrow keys from scrolling the page
-  if (e.code.startsWith('Arrow')) {
+  // Prevent arrow keys and space from scrolling the page
+  if (e.code.startsWith('Arrow') || e.code === 'Space') {
     e.preventDefault();
   }
 });

@@ -19,40 +19,66 @@ export class Duck {
   }
 
   update(dt, keys) {
-    let dx = 0;
-    let dy = 0;
-    if (keys.has('ArrowUp') || keys.has('KeyW')) dy -= 1;
-    if (keys.has('ArrowDown') || keys.has('KeyS')) dy += 1;
-    if (keys.has('ArrowLeft') || keys.has('KeyA')) dx -= 1;
-    if (keys.has('ArrowRight') || keys.has('KeyD')) dx += 1;
+    const orbiting = keys.has('Space');
+    let moving = false;
 
-    // Normalize diagonal movement
-    const mag = Math.sqrt(dx * dx + dy * dy);
-    if (mag > 0) {
-      dx /= mag;
-      dy /= mag;
-    }
+    if (orbiting) {
+      // Orbit mode: swim tangentially (CCW) at current radius
+      const rx = this.x - this.lake.cx;
+      const ry = this.y - this.lake.cy;
+      const r = Math.sqrt(rx * rx + ry * ry);
 
-    this.vx = dx * Duck.SPEED;
-    this.vy = dy * Duck.SPEED;
+      if (r > 1) { // need some radius to orbit
+        // Tangent direction (CCW): perpendicular to radial, rotated 90° left
+        const tx = -ry / r;
+        const ty = rx / r;
 
-    const newX = this.x + this.vx * dt;
-    const newY = this.y + this.vy * dt;
+        this.vx = tx * Duck.SPEED;
+        this.vy = ty * Duck.SPEED;
 
-    // Allow the duck to reach the shore (dist == radius) but not go beyond
-    const dist = this.lake.distFromCenter(newX, newY);
-    if (dist <= this.lake.radius) {
-      this.x = newX;
-      this.y = newY;
+        // Move along the circle: advance angle, keep radius fixed
+        const angularStep = (Duck.SPEED / r) * dt;
+        const currentAngle = Math.atan2(ry, rx);
+        const newAngle = currentAngle + angularStep;
+        this.x = this.lake.cx + Math.cos(newAngle) * r;
+        this.y = this.lake.cy + Math.sin(newAngle) * r;
+        moving = true;
+      }
     } else {
-      // Clamp to shore
-      const angle = Math.atan2(newY - this.lake.cy, newX - this.lake.cx);
-      this.x = this.lake.cx + Math.cos(angle) * this.lake.radius;
-      this.y = this.lake.cy + Math.sin(angle) * this.lake.radius;
+      // Normal movement: arrow keys / WASD
+      let dx = 0;
+      let dy = 0;
+      if (keys.has('ArrowUp') || keys.has('KeyW')) dy -= 1;
+      if (keys.has('ArrowDown') || keys.has('KeyS')) dy += 1;
+      if (keys.has('ArrowLeft') || keys.has('KeyA')) dx -= 1;
+      if (keys.has('ArrowRight') || keys.has('KeyD')) dx += 1;
+
+      const mag = Math.sqrt(dx * dx + dy * dy);
+      if (mag > 0) {
+        dx /= mag;
+        dy /= mag;
+        moving = true;
+      }
+
+      this.vx = dx * Duck.SPEED;
+      this.vy = dy * Duck.SPEED;
+
+      const newX = this.x + this.vx * dt;
+      const newY = this.y + this.vy * dt;
+
+      const dist = this.lake.distFromCenter(newX, newY);
+      if (dist <= this.lake.radius) {
+        this.x = newX;
+        this.y = newY;
+      } else {
+        const angle = Math.atan2(newY - this.lake.cy, newX - this.lake.cx);
+        this.x = this.lake.cx + Math.cos(angle) * this.lake.radius;
+        this.y = this.lake.cy + Math.sin(angle) * this.lake.radius;
+      }
     }
 
     // Record trail
-    if (mag > 0) {
+    if (moving) {
       this.trail.push({ x: this.x, y: this.y, t: 1.0 });
       if (this.trail.length > 60) this.trail.shift();
     }

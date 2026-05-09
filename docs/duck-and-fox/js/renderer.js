@@ -164,7 +164,7 @@ export class Renderer {
 
     ctx.fillStyle = '#888';
     ctx.font = '7px "Press Start 2P", monospace';
-    ctx.fillText('WASD / Arrows to swim', this.W / 2, this.H - 25);
+    ctx.fillText('WASD/Arrows: swim  Space: orbit', this.W / 2, this.H - 25);
     ctx.fillText(`H: hint ${showHintActive ? '(ON)' : '(OFF)'}`, this.W / 2, this.H - 12);
   }
 
@@ -212,6 +212,8 @@ export class Renderer {
       '',
       'The duck must reach shore',
       'to fly away. Can it escape?',
+      '',
+      'Hold SPACE to orbit in circles.',
     ];
     lines.forEach((line, i) => {
       ctx.fillText(line, this.W / 2, this.H * 0.35 + i * 20);
