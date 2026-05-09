@@ -3,10 +3,10 @@
 import { Lake } from './lake.js';
 
 export class Fox {
-  // Fox speed = 4× duck speed. Fox travels along the perimeter, so its
+  // Fox speed = 3.5× duck speed. Fox travels along the perimeter, so its
   // angular velocity = linear_speed / radius.  We store linear speed here
   // and convert in update().
-  static SPEED_RATIO = 4;
+  static SPEED_RATIO = 3.5;
 
   constructor(lake, duckSpeed) {
     this.lake = lake;

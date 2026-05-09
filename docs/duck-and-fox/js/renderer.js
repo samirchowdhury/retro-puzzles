@@ -208,7 +208,7 @@ export class Renderer {
       '',
       'A fox waits at the shore.',
       'It cannot swim, but runs',
-      'at 4x the duck\'s speed.',
+      'at 3.5x the duck\'s speed.',
       '',
       'The duck must reach shore',
       'to fly away. Can it escape?',
