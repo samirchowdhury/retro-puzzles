@@ -212,8 +212,6 @@ export class Renderer {
       '',
       'The duck must reach shore',
       'to fly away. Can it escape?',
-      '',
-      'Hold SPACE to orbit in circles.',
     ];
     lines.forEach((line, i) => {
       ctx.fillText(line, this.W / 2, this.H * 0.35 + i * 20);
