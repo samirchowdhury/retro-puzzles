@@ -221,15 +221,15 @@ export class Renderer {
 
     // Mini duck
     ctx.fillStyle = '#FFD700';
-    ctx.fillRect(this.W / 2 - 5, this.H * 0.72, 10, 8);
+    ctx.fillRect(this.W / 2 - 5, this.H * 0.80, 10, 8);
     ctx.fillStyle = '#FF8C00';
-    ctx.fillRect(this.W / 2 + 5, this.H * 0.72 + 2, 3, 2);
+    ctx.fillRect(this.W / 2 + 5, this.H * 0.80 + 2, 3, 2);
 
     // Mini fox
     ctx.fillStyle = '#E05500';
-    ctx.fillRect(this.W / 2 - 5, this.H * 0.78, 10, 8);
+    ctx.fillRect(this.W / 2 - 5, this.H * 0.85, 10, 8);
     ctx.fillStyle = '#FFE0C0';
-    ctx.fillRect(this.W / 2 + 5, this.H * 0.78 + 3, 3, 2);
+    ctx.fillRect(this.W / 2 + 5, this.H * 0.85 + 3, 3, 2);
 
     // Blinking prompt
     if (blink) {
