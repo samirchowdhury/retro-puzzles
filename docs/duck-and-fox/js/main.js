@@ -29,6 +29,9 @@ const lake = new Lake(CANVAS_W, CANVAS_H);
 const duck = new Duck(lake);
 const fox = new Fox(lake, Duck.SPEED);
 
+// ── Input ─────────────────────────────────────────────
+const keys = new Set();
+
 // ── Touch (mobile) ────────────────────────────────────
 const touchInput = new TouchInput(canvas, keys);
 touchInput.onTap(() => {
@@ -36,9 +39,6 @@ touchInput.onTap(() => {
     startGame();
   }
 });
-
-// ── Input ─────────────────────────────────────────────
-const keys = new Set();
 
 // Use capture phase on window to intercept Space/arrows before browser scrolls
 window.addEventListener('keydown', (e) => {
