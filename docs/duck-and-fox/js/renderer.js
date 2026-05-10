@@ -172,7 +172,7 @@ export class Renderer {
 
   // ── Touch controls overlay ─────────────────────────────
 
-  drawTouchControls(touch) {
+  drawTouchControls(touch, showHint) {
     const ctx = this.ctx;
 
     // Joystick base
@@ -207,6 +207,22 @@ export class Renderer {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('ORBIT', touch.orbitCenter.x, touch.orbitCenter.y);
+    ctx.textBaseline = 'alphabetic';
+
+    // Hint toggle button (top-right)
+    ctx.beginPath();
+    ctx.arc(touch.hintCenter.x, touch.hintCenter.y, touch.hintRadius, 0, Math.PI * 2);
+    ctx.fillStyle = showHint ? 'rgba(255,255,100,0.3)' : 'rgba(255,255,255,0.08)';
+    ctx.fill();
+    ctx.strokeStyle = showHint ? 'rgba(255,255,100,0.6)' : 'rgba(255,255,255,0.25)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.fillStyle = showHint ? 'rgba(255,255,150,0.9)' : 'rgba(255,255,255,0.5)';
+    ctx.font = '7px "Press Start 2P", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('H', touch.hintCenter.x, touch.hintCenter.y);
     ctx.textBaseline = 'alphabetic';
   }
 

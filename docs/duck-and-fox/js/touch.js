@@ -25,6 +25,11 @@ export class TouchInput {
     this.orbitCenter = { x: 390, y: 460 };
     this.orbitRadius = 34;
 
+    // Hint toggle button (top-right)
+    this.hintCenter = { x: 448, y: 20 };
+    this.hintRadius = 16;
+    this.hintCallback = null;
+
     this.deadZone = 0.2;
     this.tapCallback = null;
 
@@ -38,6 +43,7 @@ export class TouchInput {
   }
 
   onTap(cb) { this.tapCallback = cb; }
+  onHintToggle(cb) { this.hintCallback = cb; }
 
   // ── Coordinate helpers ──────────────────────────────
 
@@ -61,6 +67,11 @@ export class TouchInput {
       const p = this._coords(t);
 
       if (this.active) {
+        // Hint toggle
+        if (this._hit(p.x, p.y, this.hintCenter.x, this.hintCenter.y, this.hintRadius)) {
+          if (this.hintCallback) this.hintCallback();
+          continue;
+        }
         // Orbit button (check first — smaller, more specific)
         if (this.orbitTouchId === null &&
             this._hit(p.x, p.y, this.orbitCenter.x, this.orbitCenter.y, this.orbitRadius)) {

@@ -39,6 +39,9 @@ touchInput.onTap(() => {
     startGame();
   }
 });
+touchInput.onHintToggle(() => {
+  if (state === State.PLAYING) showHint = !showHint;
+});
 
 // Use capture phase on window to intercept Space/arrows before browser scrolls
 window.addEventListener('keydown', (e) => {
@@ -125,7 +128,7 @@ function loop(now) {
       renderer.drawDuck(duck);
       renderer.drawFox(fox);
       renderer.drawHUD(elapsed, showHint, isTouchDevice);
-      if (isTouchDevice) renderer.drawTouchControls(touchInput);
+      if (isTouchDevice) renderer.drawTouchControls(touchInput, showHint);
       renderer.drawScanlines();
       break;
 
