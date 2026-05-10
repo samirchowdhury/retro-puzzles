@@ -7,3 +7,4 @@ Fun brainteasers and puzzles reimagined in interactive form.
 ## Games
 
 - **[Duck and Fox](https://samirchowdhury.github.io/retro-puzzles/duck-and-fox/)**
+- **[Pirates and Treasure](https://samirchowdhury.github.io/retro-puzzles/pirates-and-treasure/)**
