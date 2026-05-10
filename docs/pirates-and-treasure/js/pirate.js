@@ -6,7 +6,7 @@ export const PIRATES = [
     title: 'Cabin Boy',
     name: 'Pip',
     color: '#8BC34A',
-    quipYes: "A coin? I'll take it!",
+    quipYes: "Coins for me? I'll take it!",
     quipNo: "Nothin'?! I knew it!",
   },
   {
