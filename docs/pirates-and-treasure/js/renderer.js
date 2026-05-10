@@ -153,7 +153,7 @@ export class Renderer {
       const inRow = Math.min(5, maxCoins - r * 5);
       for (let c = 0; c < inRow; c++) {
         const cx = x - (inRow - 1) * 3 + c * 6;
-        const cy = y - r * 5;
+        const cy = y + r * 5;
         ctx.fillStyle = '#FFD700';
         ctx.beginPath();
         ctx.arc(cx, cy, 3, 0, Math.PI * 2);
@@ -191,13 +191,14 @@ export class Renderer {
       ctx.fillStyle = '#FFD700';
       ctx.font = '12px "Press Start 2P", monospace';
       ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
       ctx.fillText(`${allocation[i]}`, px, baseY);
 
-      // Draw coin pile
-      this.drawCoinPile(px, baseY + 8, allocation[i]);
+      // Draw coin pile (grows downward)
+      this.drawCoinPile(px, baseY + 14, allocation[i]);
 
       // 2×2 button grid: row 0 = [-10, +10], row 1 = [-1, +1]
-      const gridTop = baseY + 30;
+      const gridTop = baseY + 40;
       const btnLayout = [
         { label: '-10', delta: -10, col: 0, row: 0 },
         { label: '+10', delta: 10,  col: 1, row: 0 },

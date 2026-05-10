@@ -31,7 +31,7 @@ export const PIRATES = [
     name: 'Rodrigo',
     color: '#9C27B0',
     quipYes: 'A wise proposal.',
-    quipNo: 'Not a single doubloon?! MUTINY!',
+    quipNo: "Not enough! MUTINY!",
   },
   {
     rank: 5,
