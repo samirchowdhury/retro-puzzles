@@ -8,10 +8,24 @@ export class Fox {
   // and convert in update().
   static SPEED_RATIO = 3.5;
 
-  constructor(lake, duckSpeed) {
+  static POLICY_PROJECTION = 'projection';
+  static POLICY_EXIT_AWARE = 'exit_aware';
+
+  constructor(lake, duckSpeed, policy = Fox.POLICY_PROJECTION) {
     this.lake = lake;
     this.linearSpeed = duckSpeed * Fox.SPEED_RATIO;
+    this.policy = policy;
     this.reset();
+  }
+
+  togglePolicy() {
+    this.policy = this.policy === Fox.POLICY_PROJECTION
+      ? Fox.POLICY_EXIT_AWARE
+      : Fox.POLICY_PROJECTION;
+  }
+
+  policyLabel() {
+    return this.policy === Fox.POLICY_EXIT_AWARE ? 'strategic' : 'projection';
   }
 
   reset() {
@@ -21,7 +35,7 @@ export class Fox {
 
   update(dt, duck) {
     // Target: the angle from lake center toward the duck (its radial projection)
-    const targetAngle = duck.angle();
+    const targetAngle = this.targetAngle(duck);
 
     // Shortest angular direction to target
     const delta = Lake.angleDelta(this.angle, targetAngle);
@@ -41,6 +55,20 @@ export class Fox {
     // Normalize to [-π, π]
     while (this.angle > Math.PI) this.angle -= 2 * Math.PI;
     while (this.angle < -Math.PI) this.angle += 2 * Math.PI;
+  }
+
+  targetAngle(duck) {
+    const projectionAngle = duck.angle();
+    if (this.policy !== Fox.POLICY_EXIT_AWARE) return projectionAngle;
+
+    const exitAngle = duck.predictedExitAngle();
+    if (exitAngle === null) return projectionAngle;
+
+    const projectionDistance = Lake.angleDist(this.angle, projectionAngle);
+    const exitDistance = Lake.angleDist(this.angle, exitAngle);
+
+    // Tie-break toward the exit-aware target; it is the stricter fox.
+    return exitDistance <= projectionDistance ? exitAngle : projectionAngle;
   }
 
   // Position on shore

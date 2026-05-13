@@ -14,6 +14,7 @@ export class Duck {
     this.y = this.lake.cy;
     this.vx = 0;
     this.vy = 0;
+    this.orbiting = false;
     // Trail of recent positions for visual effect
     this.trail = [];
   }
@@ -21,6 +22,7 @@ export class Duck {
   update(dt, keys) {
     const orbiting = keys.has('Space');
     let moving = false;
+    this.orbiting = false;
 
     if (orbiting) {
       // Orbit mode: swim tangentially (CCW) at current radius
@@ -40,6 +42,7 @@ export class Duck {
         const angularStep = (Duck.SPEED / r) * dt;
         const currentAngle = Math.atan2(ry, rx);
         const newAngle = currentAngle + angularStep;
+        this.orbiting = true;
         this.x = this.lake.cx + Math.cos(newAngle) * r;
         this.y = this.lake.cy + Math.sin(newAngle) * r;
         moving = true;
@@ -103,5 +106,28 @@ export class Duck {
   facing() {
     if (this.vx === 0 && this.vy === 0) return 0;
     return Math.atan2(this.vy, this.vx);
+  }
+
+  predictedExitAngle() {
+    if (this.orbiting) return null;
+
+    const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+    if (speed <= 1e-9) return null;
+
+    const x = this.x - this.lake.cx;
+    const y = this.y - this.lake.cy;
+    const ux = this.vx / speed;
+    const uy = this.vy / speed;
+    const r2 = x * x + y * y;
+    const dot = x * ux + y * uy;
+    const radius = this.lake.radius;
+    const discriminant = Math.max(0, dot * dot + radius * radius - r2);
+    const t = -dot + Math.sqrt(discriminant);
+
+    if (t < -1e-9) return null;
+
+    const exitX = x + Math.max(0, t) * ux;
+    const exitY = y + Math.max(0, t) * uy;
+    return Math.atan2(exitY, exitX);
   }
 }

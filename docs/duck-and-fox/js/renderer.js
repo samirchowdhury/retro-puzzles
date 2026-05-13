@@ -153,7 +153,7 @@ export class Renderer {
 
   // ── HUD ───────────────────────────────────────────────
 
-  drawHUD(elapsed, showHintActive, isTouch) {
+  drawHUD(elapsed, showHintActive, isTouch, foxPolicyLabel = 'projection') {
     const ctx = this.ctx;
     const t = elapsed.toFixed(1);
 
@@ -165,8 +165,9 @@ export class Renderer {
     if (!isTouch) {
       ctx.fillStyle = '#ccc';
       ctx.font = '12px monospace';
-      ctx.fillText('WASD/Arrows: swim   Space: orbit', this.W / 2, this.H - 28);
-      ctx.fillText(`H: hint ${showHintActive ? '(ON)' : '(OFF)'}`, this.W / 2, this.H - 12);
+      ctx.fillText('WASD/Arrows: swim   Space: orbit', this.W / 2, this.H - 44);
+      ctx.fillText(`H: hint ${showHintActive ? '(ON)' : '(OFF)'}`, this.W / 2, this.H - 28);
+      ctx.fillText(`F: fox ${foxPolicyLabel}`, this.W / 2, this.H - 12);
     }
   }
 

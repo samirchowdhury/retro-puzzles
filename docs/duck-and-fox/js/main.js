@@ -27,7 +27,7 @@ canvas.focus();
 const renderer = new Renderer(canvas);
 const lake = new Lake(CANVAS_W, CANVAS_H);
 const duck = new Duck(lake);
-const fox = new Fox(lake, Duck.SPEED);
+const fox = new Fox(lake, Duck.SPEED, initialFoxPolicy());
 
 // ── Input ─────────────────────────────────────────────
 const keys = new Set();
@@ -59,6 +59,10 @@ window.addEventListener('keydown', (e) => {
     showHint = !showHint;
   }
 
+  if (e.code === 'KeyF') {
+    fox.togglePolicy();
+  }
+
   // Prevent arrow keys and space from scrolling the page
   if (e.code.startsWith('Arrow') || e.code === 'Space' || e.key === ' ') {
     e.preventDefault();
@@ -69,6 +73,15 @@ window.addEventListener('keyup', (e) => {
   keys.delete(e.code);
   if (e.key === ' ') keys.delete('Space');
 }, { capture: true });
+
+function initialFoxPolicy() {
+  const foxParam = new URLSearchParams(window.location.search).get('fox');
+  if (foxParam === 'strategic' || foxParam === 'exit_aware') {
+    return Fox.POLICY_EXIT_AWARE;
+  }
+
+  return Fox.POLICY_PROJECTION;
+}
 
 // ── Game control ──────────────────────────────────────
 
@@ -127,7 +140,7 @@ function loop(now) {
       renderer.drawTrail(duck.trail);
       renderer.drawDuck(duck);
       renderer.drawFox(fox);
-      renderer.drawHUD(elapsed, showHint, isTouchDevice);
+      renderer.drawHUD(elapsed, showHint, isTouchDevice, fox.policyLabel());
       if (isTouchDevice) renderer.drawTouchControls(touchInput, showHint);
       renderer.drawScanlines();
       break;
