@@ -34,7 +34,7 @@ export class Fox {
   }
 
   update(dt, duck) {
-    // Target: the angle from lake center toward the duck (its radial projection)
+    // Target depends on policy: radial projection for normal/orbiting, predicted exit for smart directional motion.
     const targetAngle = this.targetAngle(duck);
 
     // Shortest angular direction to target
@@ -62,13 +62,7 @@ export class Fox {
     if (this.policy !== Fox.POLICY_EXIT_AWARE) return projectionAngle;
 
     const exitAngle = duck.predictedExitAngle();
-    if (exitAngle === null) return projectionAngle;
-
-    const projectionDistance = Lake.angleDist(this.angle, projectionAngle);
-    const exitDistance = Lake.angleDist(this.angle, exitAngle);
-
-    // Tie-break toward the exit-aware target; it is the stricter fox.
-    return exitDistance <= projectionDistance ? exitAngle : projectionAngle;
+    return exitAngle === null ? projectionAngle : exitAngle;
   }
 
   // Position on shore
