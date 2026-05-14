@@ -25,7 +25,7 @@ export class Fox {
   }
 
   policyLabel() {
-    return this.policy === Fox.POLICY_EXIT_AWARE ? 'strategic' : 'projection';
+    return this.policy === Fox.POLICY_EXIT_AWARE ? 'smart' : 'normal';
   }
 
   reset() {

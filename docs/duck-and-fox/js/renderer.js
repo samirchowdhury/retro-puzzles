@@ -153,7 +153,7 @@ export class Renderer {
 
   // ── HUD ───────────────────────────────────────────────
 
-  drawHUD(elapsed, showHintActive, isTouch, foxPolicyLabel = 'projection') {
+  drawHUD(elapsed, showHintActive, isTouch, foxPolicyLabel = 'normal') {
     const ctx = this.ctx;
     const t = elapsed.toFixed(1);
 
@@ -167,7 +167,8 @@ export class Renderer {
       ctx.font = '12px monospace';
       ctx.fillText('WASD/Arrows: swim   Space: orbit', this.W / 2, this.H - 44);
       ctx.fillText(`H: hint ${showHintActive ? '(ON)' : '(OFF)'}`, this.W / 2, this.H - 28);
-      ctx.fillText(`F: fox ${foxPolicyLabel}`, this.W / 2, this.H - 12);
+      ctx.fillStyle = foxPolicyLabel === 'smart' ? '#ffcc66' : '#ccc';
+      ctx.fillText(`F: ${foxPolicyLabel.toUpperCase()} FOX`, this.W / 2, this.H - 12);
     }
   }
 
