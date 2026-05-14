@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Duck, Fox, and MCTS</title>
+  <link rel="stylesheet" href="mcts.css">
+</head>
+<body>
+  <main class="site-shell">
+    <nav class="top-nav" aria-label="Page navigation">
+      <a href="index.html">Play Duck and Fox</a>
+      <a href="#mcts">MCTS results</a>
+    </nav>
+
+    <header class="hero">
+      <p class="eyebrow">Duck and Fox</p>
+      <h1>What does it mean for the fox to play well?</h1>
+      <p class="lead">
+        The classic puzzle has a beautiful orbiting solution. The game version adds a more slippery question:
+        once the duck starts moving, what exactly is the fox trying to intercept?
+      </p>
+    </header>
+
+    <section class="section section-grid">
+      <div>
+        <h2>The Standard Solution</h2>
+      </div>
+      <div>
+        <p>
+          In the continuous math puzzle, the duck swims on a small circle around the center until it is opposite
+          the fox. If the duck stays inside radius <code>1 / alpha</code>, its angular speed around the center is
+          greater than the fox's angular speed around the shore.
+        </p>
+        <p>
+          For a 4x fox, that critical radius is <code>0.25</code>. For the game here, the fox moves at 3.5x duck
+          speed, so the critical radius is about <code>0.286</code>. Once the duck has built enough angular
+          separation, it swims straight to shore.
+        </p>
+        <code class="formula">duck angular speed = v / r
+fox angular speed = alpha v
+duck can gain angle while orbiting if r &lt; 1 / alpha</code>
+      </div>
+    </section>
+
+    <section class="section section-grid">
+      <div>
+        <h2>The Ambiguity</h2>
+      </div>
+      <div>
+        <p>
+          The original story says the fox runs around the lake, but it does not fully specify the fox's policy.
+          In code, that missing sentence matters.
+        </p>
+        <p>
+          A <span class="tag">projection fox</span> chases the duck's current radial projection on the shore.
+          A <span class="tag pink">predicted-exit fox</span> chases the shore point where the duck's current
+          straight-line trajectory would exit. During orbiting, there is no straight-line exit target, so both
+          policies chase the radial projection.
+        </p>
+        <p>
+          The projection fox is exploitable: a tiny directional commitment can make the fox run after the wrong
+          moving point. The predicted-exit fox removes that particular loophole. The surprise is that MCTS still
+          finds a different exploit.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="mcts">
+      <h2>MCTS Search</h2>
+      <p>
+        The search uses a sparse reward: a rollout is worth 1 only if the duck reaches shore with visible angular
+        separation. The action set is deliberately game-like: short or long presses of up, down, left, right, plus
+        an orbit button.
+      </p>
+      <div class="video-grid">
+        <figure>
+          <video controls muted loop playsinline preload="metadata" src="mcts-assets/projection-gallery.mp4"></video>
+          <figcaption>Projection fox: MCTS converges to an orbit-and-exit family.</figcaption>
+        </figure>
+        <figure>
+          <video controls muted loop playsinline preload="metadata" src="mcts-assets/predicted-exit-gallery.mp4"></video>
+          <figcaption>Predicted-exit fox: the simple projection exploit is gone, but a piecewise path still wins.</figcaption>
+        </figure>
+      </div>
+
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Fox policy</th>
+            <th>Five-minute iterations</th>
+            <th>First win</th>
+            <th>Final root mean</th>
+            <th>Principal variation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Projection</td>
+            <td>10,506,600</td>
+            <td>1,235</td>
+            <td>0.974</td>
+            <td><code>down 0.25, left 0.5, left 0.5, left 0.5, left 0.5, left 0.25</code></td>
+          </tr>
+          <tr>
+            <td>Predicted exit</td>
+            <td>12,068,758</td>
+            <td>177</td>
+            <td>0.986</td>
+            <td><code>down 0.5, left 0.5, down 0.5, down 0.5, down 0.5, left 0.25</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>Convergence</h2>
+      <p>
+        In both five-minute runs, the early search mostly sees losses. Once a winning family appears, the tree
+        rapidly concentrates visits on one root action and the sliding-window win rate jumps toward 1.
+      </p>
+      <div class="plot-grid">
+        <figure>
+          <img src="mcts-assets/mcts-convergence.png" alt="Three-panel MCTS convergence plot comparing projection and predicted-exit fox policies.">
+          <figcaption>Cumulative win rate, sliding-window win rate, and top-action visit share.</figcaption>
+        </figure>
+        <figure>
+          <img src="mcts-assets/sliding-win-rate.png" alt="Sliding-window win-rate plot comparing projection and predicted-exit fox policies.">
+          <figcaption>Win rate over the prior 100,000 iterations, overlaid for both fox policies.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section section-grid">
+      <div>
+        <h2>What I Think This Shows</h2>
+      </div>
+      <div>
+        <p>
+          MCTS is useful here not because it discovers the textbook solution directly, but because it exposes the
+          assumptions hidden inside the rules. A projection-chasing fox creates one game. A predicted-exit fox
+          creates another.
+        </p>
+        <p>
+          The predicted-exit fox invalidates the most obvious exploit. But the duck can still win by changing its
+          intended exit point over time. That is not the same as the clean orbiting proof, and it is exactly the
+          kind of behavior that makes the game version worth studying separately from the math puzzle.
+        </p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
